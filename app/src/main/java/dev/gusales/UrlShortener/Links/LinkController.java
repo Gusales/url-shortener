@@ -1,11 +1,11 @@
 package dev.gusales.UrlShortener.Links;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -34,5 +34,15 @@ public class LinkController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
 
+    }
+
+    @GetMapping("/r/{shortenUrl}")
+    public void redirectLink(@PathVariable String shortenUrl, HttpServletResponse respose) throws IOException {
+        LinkModel link = linkService.getUrlOriginal(shortenUrl);
+        if (link != null){
+            respose.sendRedirect(link.getUrlLong());
+        } else {
+            respose.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 }

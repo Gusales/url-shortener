@@ -38,7 +38,7 @@ public class LinkService {
 
     public LinkModel getUrlOriginal(String shortedUrl){
         try {
-            return linkRepository.findByUrlLong(shortedUrl);
+            return linkRepository.findByUrlShort(shortedUrl);
         } catch (Exception error) {
             throw new RuntimeException("Url not found!");
         }
