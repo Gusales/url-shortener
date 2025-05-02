@@ -25,14 +25,6 @@ public class LinkModel {
     @Column(name = "url_created_at_date")
     private LocalDateTime urlCreatedAt;
 
-    public LinkModel(Long idUrl, String urlLong, String urlShort, String urlQrCode, LocalDateTime urlCreatedAt) {
-        this.idUrl = idUrl;
-        this.urlLong = urlLong;
-        this.urlShort = urlShort;
-        this.urlQrCode = urlQrCode;
-        this.urlCreatedAt = urlCreatedAt;
-    }
-
     public Long getIdUrl() {
         return idUrl;
     }
