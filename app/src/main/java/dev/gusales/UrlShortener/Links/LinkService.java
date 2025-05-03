@@ -1,8 +1,14 @@
 package dev.gusales.UrlShortener.Links;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 
 @Service
@@ -31,7 +37,20 @@ public class LinkService {
         link.setUrlLong(originalUrl);
         link.setUrlShort(this.generateRandomUrl());
         link.setUrlCreatedAt(LocalDateTime.now());
-        link.setUrlQrCode("QR CODE IS NOW UNAVAILABLE");
+        try {
+            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            BitMatrix bitMatrix = qrCodeWriter.encode(link.getUrlShort(), BarcodeFormat.QR_CODE, 200, 200);
+
+            ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
+            MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
+
+            byte[] pngQrCodeData = pngOutputStream.toByteArray();
+
+            // Escolher onde salvar o link da imagem do qrcode
+            link.setUrlQrCode("QR CODE IS NOW UNAVAILABLE");
+        } catch (Exception e) {
+            link.setUrlQrCode("QR CODE IS NOW UNAVAILABLE");
+        }
 
         return linkRepository.save(link);
     }
